@@ -4,6 +4,12 @@ import { STARTUP_BY_ID_QUERY } from "@/sanity/lib/queries";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import markdownit from 'markdown-it'
+import { Suspense } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
+import Views from "@/components/Views";
+
+const md = markdownit()
 
 //this is to make certain parts of the page dynamic whereas certain part of the page static
 export const experimental_ppr = true;
@@ -15,6 +21,8 @@ export default async function Startup({ params }: { params: Promise<{ id: string
     const post = await client.fetch(STARTUP_BY_ID_QUERY, { id });
 
     if (!post) return notFound();
+
+    const parsedContent =  md.render(post?.pitch || "")
 
     return (
         <>
@@ -53,7 +61,20 @@ export default async function Startup({ params }: { params: Promise<{ id: string
                     <h3 className="text-30-bold">
                         Pitch Details
                     </h3>
+                    {parsedContent? (
+                        <article className="prose max-w-4xl font-work-sans break-all" dangerouslySetInnerHTML={{__html : parsedContent}}/>
+                    ) : (
+                        <p className="no-result">No details provided</p>
+                    )}
                 </div>
+
+                <hr className="divider"/>
+
+                {/* to make a certain segment of the webpage dynamic, we will wrap it in a suspense block given by reach and the fallback is the stuff that is to be rendered when the data fetching is in process */}
+                <Suspense fallback={<Skeleton className="view-skeleton"/>}>
+                    <Views id={id}/>
+                </Suspense>
+            
             </section>
 
 
