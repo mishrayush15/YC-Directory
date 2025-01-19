@@ -19,7 +19,12 @@ export default function StartupForm(){
     const {toast} = useToast();
     const router = useRouter();
 
-    const handleFormSubmit = async (prevState : any, formData : FormData) => {
+    type FormState = {
+        error: string;
+        status: 'INITIAL' | 'SUCCESS' | 'ERROR'; // Use the specific statuses your state supports
+    };
+
+    const handleFormSubmit = async (prevState : FormState, formData : FormData) => {
         try{
             const formValues = {
                 title : formData.get("title") as string,
@@ -74,7 +79,8 @@ export default function StartupForm(){
         }
     }
 
-    const [state, formAction, isPending] = useActionState(handleFormSubmit, { 
+    
+    const [, formAction, isPending] = useActionState(handleFormSubmit, { 
         error : '', 
         status : 'INITIAL' 
     });

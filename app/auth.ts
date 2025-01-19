@@ -33,7 +33,7 @@ type Session = {
         image: string;
     };
 };
-
+// @ts-expect-error 'there is a version error in NextAuth'
 export const { handlers, auth, signIn, signOut } = NextAuth({
     providers: [GitHub],
     callbacks: {

@@ -1,9 +1,10 @@
-import { formatDate } from "@/lib/utils";
+import { cn, formatDate } from "@/lib/utils";
 import { EyeIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { Author, Startup } from "@/sanity/types";
+import { Skeleton } from "./ui/skeleton";
 
 export type StartupTypeCard = Omit<Startup, "author"> & {author? : Author}
 
@@ -33,7 +34,7 @@ export default function StartupCard({ post } : {post : StartupTypeCard}){
                 </div>
                 {/* to make NextJS trust any other website source we can edit the same in NextConfig file to make nextjs trust the source */}
                 <Link href={`/user/${post.author?._id}`}>
-                    <Image src="https://placehold.co/48x48" alt="Profile Image" width={48} height={48} className="rounded-full"/>
+                    <Image src={post.author?.image || ''}  alt="Profile Image" width={48} height={48} className="rounded-full"/>
                 </Link>
             </div>
 
@@ -60,4 +61,15 @@ export default function StartupCard({ post } : {post : StartupTypeCard}){
             </div>
         </li>
     )
+}
+
+export const StartupCardSkeleton = () => {
+    return (
+    <>
+    {[0,1,2,3,4].map((index : number)=>(
+        <li key={cn('skeleton', index)}>
+            <Skeleton className="startup-card_skeleton"/>
+        </li>
+    ))}
+    </> )
 }
