@@ -2,6 +2,7 @@ import StartupCard, { StartupTypeCard } from "@/components/StartupCard";
 import SearchForm from "../../components/SearchForm";
 import { STARTUP_QUERY } from "@/sanity/lib/queries";
 import { sanityFetch, SanityLive } from "@/sanity/lib/live";
+import { auth } from "../auth";
 
 export default async function Home({searchParams} : {
   searchParams : Promise<{query?: string}>
@@ -10,6 +11,10 @@ export default async function Home({searchParams} : {
   const query = (await searchParams).query;
 
   const params = {search : query || null};
+
+  const session = await auth();
+  console.log(session?.id);
+  
 
 
   //as we have set the useCdn to false to make the updation LIVE, therefore we are using this format to fetch data
